@@ -22,10 +22,14 @@ public class FromModuleCheck extends AbstractCheck {
 
     @Override
     public void visitToken(DetailAST ast) {
-        DetailAST modifiers = ast.findFirstToken(TokenTypes.MODIFIERS).findFirstToken(TokenTypes.ANNOTATION).findFirstToken(TokenTypes.IDENT);
-        if(modifiers.getText().equals("Mixin")) {
-            String message = "Mixin class found";
-            log(ast.getLineNo(), message);
+        try {
+            DetailAST modifiers = ast.findFirstToken(TokenTypes.MODIFIERS).findFirstToken(TokenTypes.ANNOTATION).findFirstToken(TokenTypes.IDENT);
+            if (modifiers.getText().equals("Mixin")) {
+                String message = "Mixin class found";
+                log(ast.getLineNo(), message);
+            }
+        } catch (NullPointerException npe) {
+            System.out.println(npe);
         }
     }
 }
