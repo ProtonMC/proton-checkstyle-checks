@@ -12,12 +12,12 @@ public class FromModuleCheck extends AbstractCheck {
 
     @Override
     public int[] getAcceptableTokens() {
-        return new int[0];
+        return getRequiredTokens();
     }
 
     @Override
     public int[] getRequiredTokens() {
-        return new int[0];
+        return getDefaultTokens();
     }
 
     @Override
