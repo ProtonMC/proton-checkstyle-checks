@@ -1,6 +1,8 @@
 package io.github.protonmc.ProtonCheckstylePlugin;
 
-import com.puppycrawl.tools.checkstyle.api.*;
+import com.puppycrawl.tools.checkstyle.api.AbstractCheck;
+import com.puppycrawl.tools.checkstyle.api.DetailAST;
+import com.puppycrawl.tools.checkstyle.api.TokenTypes;
 
 public class FromModuleCheck extends AbstractCheck {
     @Override
@@ -27,10 +29,11 @@ public class FromModuleCheck extends AbstractCheck {
             boolean foundFromModule = false;
             boolean foundMixinMethod = false;
             for (int i = 0; i < modifier.getChildCount(); i++) {
-                if (modifier.findFirstToken(TokenTypes.IDENT).getText().equals("Inject") ||
-                    modifier.findFirstToken(TokenTypes.IDENT).getText().equals("Redirect") ||
-                    modifier.findFirstToken(TokenTypes.IDENT).getText().equals("ModifyArg") ||
-                    modifier.findFirstToken(TokenTypes.IDENT).getText().equals("ModifyArgs")) {
+                if (modifier.findFirstToken(TokenTypes.IDENT).getText().contains("Inject") ||
+                    modifier.findFirstToken(TokenTypes.IDENT).getText().contains("Redirect") ||
+                    modifier.findFirstToken(TokenTypes.IDENT).getText().contains("ModifyArg") ||
+                    modifier.findFirstToken(TokenTypes.IDENT).getText().contains("ModifyConstant") ||
+                    modifier.findFirstToken(TokenTypes.IDENT).getText().contains("ModifyVariable")) {
                     foundMixinMethod = true;
                 }
                 if (modifier.findFirstToken(TokenTypes.IDENT).getText().equals("FromModule")) {
