@@ -7,7 +7,7 @@ import com.puppycrawl.tools.checkstyle.api.TokenTypes;
 public class FromModuleCheck extends AbstractCheck {
     @Override
     public int[] getDefaultTokens() {
-        return new int[] {TokenTypes.CLASS_DEF, TokenTypes.INTERFACE_DEF};
+        return new int[] {TokenTypes.METHOD_DEF};
     }
 
     @Override
@@ -22,14 +22,29 @@ public class FromModuleCheck extends AbstractCheck {
 
     @Override
     public void visitToken(DetailAST ast) {
-        try {
-            DetailAST modifiers = ast.findFirstToken(TokenTypes.MODIFIERS).findFirstToken(TokenTypes.ANNOTATION).findFirstToken(TokenTypes.IDENT);
-            if (modifiers.getText().equals("Mixin")) {
-                String message = "Mixin class found";
-                log(ast.getLineNo(), message);
+        if (ast == null) return;
+        if (ast.getChildCount(TokenTypes.MODIFIERS) < 1) return;
+        if (ast.findFirstToken(TokenTypes.MODIFIERS) == null) return;
+        DetailAST modifiers = ast.findFirstToken(TokenTypes.MODIFIERS);
+        if (modifiers.getChildCount(TokenTypes.ANNOTATION) < 1) return;
+        DetailAST modifier = modifiers.findFirstToken(TokenTypes.ANNOTATION);
+        boolean foundFromModule = false;
+        boolean foundMixinMethod = false;
+        for (int i = 0; i < modifiers.getChildCount(TokenTypes.ANNOTATION); i++) {
+            if (modifier.findFirstToken(TokenTypes.IDENT).getText().equals("Inject") ||
+                modifier.findFirstToken(TokenTypes.IDENT).getText().equals("Redirect") ||
+                modifier.findFirstToken(TokenTypes.IDENT).getText().equals("ModifyArg") ||
+                modifier.findFirstToken(TokenTypes.IDENT).getText().equals("ModifyArgs")) {
+                foundMixinMethod = true;
+            } else if (modifier.findFirstToken(TokenTypes.IDENT).getText().equals("FromModule")) {
+                foundFromModule = true;
             }
-        } catch (NullPointerException npe) {
-            System.out.println(npe);
+            while(modifier.getType() != TokenTypes.ANNOTATION) {
+                modifier = modifier.getNextSibling();
+            }
+        }
+        if (foundMixinMethod && !foundFromModule) {
+            log(ast.getLineNo(), "All Mixin injections have to have a @FromModule annotation!");
         }
     }
 }
