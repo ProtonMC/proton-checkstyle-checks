@@ -36,7 +36,7 @@ public class FromModuleCheck extends AbstractCheck {
                     modifier.findFirstToken(TokenTypes.IDENT).getText().contains("ModifyVariable")) {
                     foundMixinMethod = true;
                 }
-                if (modifier.findFirstToken(TokenTypes.IDENT).getText().equals("FromModule")) {
+                if (modifier.findFirstToken(TokenTypes.IDENT).getText().contains("FromModule")) {
                     foundFromModule = true;
                 }
                 modifier = modifier.getNextSibling();
