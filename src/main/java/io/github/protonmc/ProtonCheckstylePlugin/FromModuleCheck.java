@@ -18,10 +18,6 @@ public class FromModuleCheck extends AbstractCheck {
         return getDefaultTokens();
     }
 
-    public FromModuleCheck() {
-        setSeverity("info");
-    }
-
     @Override
     public void visitToken(DetailAST ast) {
         try {
@@ -36,16 +32,14 @@ public class FromModuleCheck extends AbstractCheck {
                     modifier.findFirstToken(TokenTypes.IDENT).getText().equals("ModifyArg") ||
                     modifier.findFirstToken(TokenTypes.IDENT).getText().equals("ModifyArgs")) {
                     foundMixinMethod = true;
-                    log(ast.getLineNo(), "Found Mixin injection");
                 }
                 if (modifier.findFirstToken(TokenTypes.IDENT).getText().equals("FromModule")) {
                     foundFromModule = true;
-                    log(ast.getLineNo(), "Found FromModule");
                 }
                 modifier = modifier.getNextSibling();
             }
             if (foundMixinMethod && !foundFromModule) {
-                log(ast.getLineNo(), "All Mixin injections have to have a @FromModule annotation!");
+                log(modifier.getLineNo(), "All Mixin injections have to have a @FromModule annotation!");
             }
         } catch (Throwable t) {
             System.out.println(t.toString());
