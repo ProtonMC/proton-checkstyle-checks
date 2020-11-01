@@ -1,6 +1,7 @@
 plugins {
     java
     maven
+    id("com.github.kt3k.coveralls") version "2.8.2"
 }
 
 group = "io.github.protonmc"
