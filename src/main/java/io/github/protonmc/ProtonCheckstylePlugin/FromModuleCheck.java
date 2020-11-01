@@ -22,28 +22,32 @@ public class FromModuleCheck extends AbstractCheck {
 
     @Override
     public void visitToken(DetailAST ast) {
-        DetailAST modifiers = ast.findFirstToken(TokenTypes.MODIFIERS);
-        if (modifiers.getChildCount(TokenTypes.ANNOTATION) < 1) return;
-        DetailAST modifier = modifiers.findFirstToken(TokenTypes.ANNOTATION);
-        boolean foundFromModule = false;
-        boolean foundMixinMethod = false;
-        for (int i = 0; i < modifiers.getChildCount(TokenTypes.ANNOTATION); i++) {
-            if (modifier.findFirstToken(TokenTypes.IDENT).getText().equals("Inject") ||
-                modifier.findFirstToken(TokenTypes.IDENT).getText().equals("Redirect") ||
-                modifier.findFirstToken(TokenTypes.IDENT).getText().equals("ModifyArg") ||
-                modifier.findFirstToken(TokenTypes.IDENT).getText().equals("ModifyArgs")) {
-                foundMixinMethod = true;
-                System.out.println("Found Mixin injection");
-            } else if (modifier.findFirstToken(TokenTypes.IDENT).getText().equals("FromModule")) {
-                foundFromModule = true;
-                System.out.println("Found FromModule");
+        try {
+            DetailAST modifiers = ast.findFirstToken(TokenTypes.MODIFIERS);
+            if (modifiers.getChildCount(TokenTypes.ANNOTATION) < 1) return;
+            DetailAST modifier = modifiers.findFirstToken(TokenTypes.ANNOTATION);
+            boolean foundFromModule = false;
+            boolean foundMixinMethod = false;
+            for (int i = 0; i < modifiers.getChildCount(TokenTypes.ANNOTATION); i++) {
+                if (modifier.findFirstToken(TokenTypes.IDENT).getText().equals("Inject") ||
+                    modifier.findFirstToken(TokenTypes.IDENT).getText().equals("Redirect") ||
+                    modifier.findFirstToken(TokenTypes.IDENT).getText().equals("ModifyArg") ||
+                    modifier.findFirstToken(TokenTypes.IDENT).getText().equals("ModifyArgs")) {
+                    foundMixinMethod = true;
+                    System.out.println("Found Mixin injection");
+                } else if (modifier.findFirstToken(TokenTypes.IDENT).getText().equals("FromModule")) {
+                    foundFromModule = true;
+                    System.out.println("Found FromModule");
+                }
+                while(modifier.getType() != TokenTypes.ANNOTATION) {
+                    modifier = modifier.getNextSibling();
+                }
             }
-            while(modifier.getType() != TokenTypes.ANNOTATION) {
-                modifier = modifier.getNextSibling();
+            if (foundMixinMethod && !foundFromModule) {
+                log(ast.getLineNo(), "All Mixin injections have to have a @FromModule annotation!");
             }
-        }
-        if (foundMixinMethod && !foundFromModule) {
-            log(ast.getLineNo(), "All Mixin injections have to have a @FromModule annotation!");
+        } catch (Throwable t) {
+            System.out.println(t.toString());
         }
     }
 }
