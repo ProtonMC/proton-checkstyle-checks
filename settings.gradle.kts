@@ -1,2 +1,2 @@
-rootProject.name = "ProtonCheckstylePlugin"
+rootProject.name = "proton-checkstyle-checks"
 

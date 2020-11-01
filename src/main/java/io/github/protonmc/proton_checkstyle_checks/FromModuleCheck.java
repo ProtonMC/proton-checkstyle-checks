@@ -1,4 +1,4 @@
-package io.github.protonmc.ProtonCheckstylePlugin;
+package io.github.protonmc.proton_checkstyle_checks;
 
 import com.puppycrawl.tools.checkstyle.api.AbstractCheck;
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
