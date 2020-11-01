@@ -1,8 +1,6 @@
 package io.github.protonmc.ProtonCheckstylePlugin;
 
-import com.puppycrawl.tools.checkstyle.api.AbstractCheck;
-import com.puppycrawl.tools.checkstyle.api.DetailAST;
-import com.puppycrawl.tools.checkstyle.api.TokenTypes;
+import com.puppycrawl.tools.checkstyle.api.*;
 
 public class FromModuleCheck extends AbstractCheck {
     @Override
@@ -20,6 +18,10 @@ public class FromModuleCheck extends AbstractCheck {
         return getDefaultTokens();
     }
 
+    public FromModuleCheck() {
+        setSeverity("info");
+    }
+
     @Override
     public void visitToken(DetailAST ast) {
         try {
@@ -34,10 +36,10 @@ public class FromModuleCheck extends AbstractCheck {
                     modifier.findFirstToken(TokenTypes.IDENT).getText().equals("ModifyArg") ||
                     modifier.findFirstToken(TokenTypes.IDENT).getText().equals("ModifyArgs")) {
                     foundMixinMethod = true;
-                    System.out.println("Found Mixin injection");
+                    log(ast.getLineNo(), "Found Mixin injection");
                 } else if (modifier.findFirstToken(TokenTypes.IDENT).getText().equals("FromModule")) {
                     foundFromModule = true;
-                    System.out.println("Found FromModule");
+                    log(ast.getLineNo(), "Found FromModule");
                 }
                 modifier = modifiers.getNextSibling();
             }
