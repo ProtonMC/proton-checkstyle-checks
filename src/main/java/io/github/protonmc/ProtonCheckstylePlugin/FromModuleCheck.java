@@ -28,7 +28,8 @@ public class FromModuleCheck extends AbstractCheck {
             DetailAST modifier = modifiers.findFirstToken(TokenTypes.ANNOTATION);
             boolean foundFromModule = false;
             boolean foundMixinMethod = false;
-            for (int i = 0; i < modifier.getChildCount(); i++) {
+            while(modifier != null) {
+                if(modifier.getType() != TokenTypes.ANNOTATION) break;
                 if (modifier.findFirstToken(TokenTypes.IDENT).getText().contains("Inject") ||
                     modifier.findFirstToken(TokenTypes.IDENT).getText().contains("Redirect") ||
                     modifier.findFirstToken(TokenTypes.IDENT).getText().contains("ModifyArg") ||
