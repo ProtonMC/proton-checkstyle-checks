@@ -28,7 +28,7 @@ public class FromModuleCheck extends AbstractCheck {
             DetailAST modifier = modifiers.findFirstToken(TokenTypes.ANNOTATION);
             boolean foundFromModule = false;
             boolean foundMixinMethod = false;
-            for (int i = 0; i < modifiers.getChildCount(TokenTypes.ANNOTATION); i++) {
+            for (int i = 0; i < modifier.getChildCount(); i++) {
                 if (modifier.findFirstToken(TokenTypes.IDENT).getText().equals("Inject") ||
                     modifier.findFirstToken(TokenTypes.IDENT).getText().equals("Redirect") ||
                     modifier.findFirstToken(TokenTypes.IDENT).getText().equals("ModifyArg") ||
@@ -39,9 +39,7 @@ public class FromModuleCheck extends AbstractCheck {
                     foundFromModule = true;
                     System.out.println("Found FromModule");
                 }
-                while(modifier.getType() != TokenTypes.ANNOTATION) {
-                    modifier = modifier.getNextSibling();
-                }
+                modifier = modifiers.getNextSibling();
             }
             if (foundMixinMethod && !foundFromModule) {
                 log(ast.getLineNo(), "All Mixin injections have to have a @FromModule annotation!");
