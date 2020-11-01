@@ -22,9 +22,6 @@ public class FromModuleCheck extends AbstractCheck {
 
     @Override
     public void visitToken(DetailAST ast) {
-        if (ast == null) return;
-        if (ast.getChildCount(TokenTypes.MODIFIERS) < 1) return;
-        if (ast.findFirstToken(TokenTypes.MODIFIERS) == null) return;
         DetailAST modifiers = ast.findFirstToken(TokenTypes.MODIFIERS);
         if (modifiers.getChildCount(TokenTypes.ANNOTATION) < 1) return;
         DetailAST modifier = modifiers.findFirstToken(TokenTypes.ANNOTATION);
