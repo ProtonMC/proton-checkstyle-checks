@@ -34,7 +34,9 @@ public class FromModuleCheck extends AbstractCheck {
                     modifier.findFirstToken(TokenTypes.IDENT).getText().contains("Redirect") ||
                     modifier.findFirstToken(TokenTypes.IDENT).getText().contains("ModifyArg") ||
                     modifier.findFirstToken(TokenTypes.IDENT).getText().contains("ModifyConstant") ||
-                    modifier.findFirstToken(TokenTypes.IDENT).getText().contains("ModifyVariable")) {
+                    modifier.findFirstToken(TokenTypes.IDENT).getText().contains("ModifyVariable") ||
+                    modifier.findFirstToken(TokenTypes.IDENT).getText().contains("Overwrite") ||
+                    modifier.findFirstToken(TokenTypes.IDENT).getText().contains("Unique")) {
                     foundMixinMethod = true;
                 }
                 if (modifier.findFirstToken(TokenTypes.IDENT).getText().contains("FromModule")) {
