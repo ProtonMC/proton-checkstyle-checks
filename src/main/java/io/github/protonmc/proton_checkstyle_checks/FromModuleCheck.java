@@ -5,6 +5,12 @@ import com.puppycrawl.tools.checkstyle.api.DetailAST;
 import com.puppycrawl.tools.checkstyle.api.TokenTypes;
 
 public class FromModuleCheck extends AbstractCheck {
+    private String annotation = "FromModule";
+
+    public void setAnnotation(String annotation) {
+        this.annotation = annotation;
+    }
+
     @Override
     public int[] getDefaultTokens() {
         return new int[] {TokenTypes.METHOD_DEF};
@@ -29,7 +35,7 @@ public class FromModuleCheck extends AbstractCheck {
             boolean foundFromModule = false;
             boolean foundMixinMethod = false;
             while(modifier != null) {
-                if(modifier.getType() != TokenTypes.ANNOTATION) break;
+                if (modifier.getType() != TokenTypes.ANNOTATION) break;
                 if (modifier.findFirstToken(TokenTypes.IDENT).getText().contains("Inject") ||
                     modifier.findFirstToken(TokenTypes.IDENT).getText().contains("Redirect") ||
                     modifier.findFirstToken(TokenTypes.IDENT).getText().contains("ModifyArg") ||
@@ -39,13 +45,13 @@ public class FromModuleCheck extends AbstractCheck {
                     modifier.findFirstToken(TokenTypes.IDENT).getText().contains("Unique")) {
                     foundMixinMethod = true;
                 }
-                if (modifier.findFirstToken(TokenTypes.IDENT).getText().contains("FromModule")) {
+                if (modifier.findFirstToken(TokenTypes.IDENT).getText().contains(annotation)) {
                     foundFromModule = true;
                 }
                 modifier = modifier.getNextSibling();
             }
             if (foundMixinMethod && !foundFromModule) {
-                log(modifier.getLineNo(), "All Mixin injections have to have a @FromModule annotation!");
+                log(modifier.getLineNo(), "All Mixin injections must have a @" + annotation + " annotation!");
             }
         } catch (Throwable t) {
             System.out.println(t.toString());
