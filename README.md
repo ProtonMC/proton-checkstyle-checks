@@ -11,7 +11,7 @@ Checks:
     * Unstable? Kinda? It doesn't verify that the classes are from the correct package.
 
 
-## 1.0 or earlier:
+## 1.1 or earlier:
 Checks:
 * `io.github.protonmc.proton_checkstyle_checks.FromModuleCheck`
     * Enforces the use of `@FromModule` in Mixin injections.
